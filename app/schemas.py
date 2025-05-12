@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, conint
 from datetime import datetime
 
 class PostBase(BaseModel):
@@ -9,12 +9,6 @@ class PostBase(BaseModel):
 
 class PostCreate(PostBase):
     pass
-
-class Post(BaseModel):
-    title: str
-    content: str
-    published: bool 
-    created_at:datetime
 
 class UserCreate(BaseModel):
     email:EmailStr
@@ -29,9 +23,26 @@ class UserLogin(BaseModel):
     email:EmailStr
     password:str
 
+class Post(BaseModel):
+    title: str
+    content: str
+    published: bool 
+    created_at:datetime
+    user_id:int
+    user: UserResponse
+
+class PostResponse(BaseModel):
+    Posts:Post
+    votes:int
+
 class Token(BaseModel):
     access_token:str
     token_type:str
 
 class TokenData(BaseModel):
+    user_id: int
     username: Optional[str]
+
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1)
